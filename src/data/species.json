@@ -1,0 +1,4 @@
+{
+  "Pikachu": { "hp": 35, "attack": 55, "defense": 40 },
+  "Bulbasaur": { "hp": 45, "attack": 49, "defense": 49 }
+}
