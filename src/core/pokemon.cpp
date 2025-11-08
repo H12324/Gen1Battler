@@ -1,7 +1,15 @@
 #include "core/pokemon.hpp"
 
-Pokemon::Pokemon(std::string name, int hp)
-    : name_(std::move(name)), hp_(hp) {}
+Pokemon::Pokemon(std::string name, int hp, int atk, int def, int spd, int spe, int level) {
+	name_ = std::move(name);
+	hp_ = hp;
+	level = level;
+	stats.push_back(hp);
+	stats.push_back(atk);
+	stats.push_back(def);
+	stats.push_back(spd);
+	stats.push_back(spe);
+}
 
 const std::string& Pokemon::name() const { return name_; }
 int Pokemon::hp() const { return hp_; }
