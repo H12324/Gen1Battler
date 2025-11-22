@@ -103,17 +103,65 @@ void load_species(const std::string &path) {
     std::cout << "Loaded species data successfully\n";
 }
 
+
+// Helper to parse move category
+MoveCategory parseCategory(const std::string& catStr) {
+    if (catStr == "Physical") return MoveCategory::Physical;
+    if (catStr == "Special") return MoveCategory::Special;
+    return MoveCategory::Status;
+}
+
 void load_moves(const std::string &path) {
     std::cout << "Loading moves from: " << path << "\n";
     auto& gd = GameData::getInstance();
     
-    gd.addMove("Tackle", {
-        "Tackle", PokeType::Normal, MoveCategory::Physical, 35, 95, 35
-    });
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        std::cerr << "Warning: Could not open " << path << ", using fallback data\n";
+        // Fallback to hardcoded data
+        gd.addMove("Tackle", {"Tackle", PokeType::Normal, MoveCategory::Physical, 35, 95, 35});
+        gd.addMove("Thunder Shock", {"Thunder Shock", PokeType::Electric, MoveCategory::Special, 40, 100, 30});
+        return;
+    }
     
-    gd.addMove("ThunderShock", {
-        "ThunderShock", PokeType::Electric, MoveCategory::Special, 40, 100, 30
-    });
+    std::string line;
+    std::string currentMove;
+    
+    while (std::getline(file, line)) {
+        // Skip empty lines and braces
+        if (line.find('{') != std::string::npos && line.find('}') == std::string::npos) {
+            continue;
+        }
+        if (line.find('}') != std::string::npos && line.find('{') == std::string::npos) {
+            continue;
+        }
+        
+        // Find move name
+        size_t nameStart = line.find('"');
+        if (nameStart != std::string::npos) {
+            size_t nameEnd = line.find('"', nameStart + 1);
+            if (nameEnd != std::string::npos) {
+                currentMove = line.substr(nameStart + 1, nameEnd - nameStart - 1);
+                
+                // Check if this line has the full data
+                if (line.find("type") != std::string::npos) {
+                    // Parse the move data from this line
+                    PokeType type = parseType(extractValue(line, "type"));
+                    MoveCategory category = parseCategory(extractValue(line, "category"));
+                    int power = std::stoi(extractValue(line, "power"));
+                    int accuracy = std::stoi(extractValue(line, "accuracy"));
+                    int pp = std::stoi(extractValue(line, "pp"));
+                    
+                    gd.addMove(currentMove, {
+                        currentMove, type, category, power, accuracy, pp
+                    });
+                }
+            }
+        }
+    }
+    
+    file.close();
+    std::cout << "Loaded moves data successfully\n";
 }
 
 void load_type_chart(const std::string &path) {
