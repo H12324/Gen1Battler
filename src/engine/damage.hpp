@@ -1,4 +1,13 @@
 #pragma once
 #include <algorithm>
 
-int calculate_damage(int power, int attack, int defense);
+#include "core/pokemon.hpp"
+#include "core/move.hpp"
+
+struct DamageResult {
+    int damage;
+    bool critical;
+    float type_effectiveness;
+};
+
+DamageResult calculate_damage(const Pokemon& attacker, const Pokemon& defender, const Move& move);

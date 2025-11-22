@@ -1,6 +1,7 @@
 include(${CMAKE_SOURCE_DIR}/cmake/FetchCatch2.cmake)
 
 add_executable(tests
+  main_test.cpp
   test_damage.cpp
   test_accuracy.cpp
   test_battle.cpp

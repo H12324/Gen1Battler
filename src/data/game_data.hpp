@@ -48,8 +48,21 @@ public:
         return nullptr;
     }
 
+    void setTypeEffectiveness(PokeType attack, PokeType defend, float effectiveness) {
+        type_chart[attack][defend] = effectiveness;
+    }
+
+    float getEffectiveness(PokeType attack, PokeType defend) const {
+        if (attack == PokeType::None || defend == PokeType::None) return 1.0f;
+        if (type_chart.count(attack) && type_chart.at(attack).count(defend)) {
+            return type_chart.at(attack).at(defend);
+        }
+        return 1.0f;
+    }
+
 private:
     GameData() {}
     std::unordered_map<std::string, SpeciesData> species_map;
     std::unordered_map<std::string, MoveData> move_map;
+    std::unordered_map<PokeType, std::unordered_map<PokeType, float>> type_chart;
 };
