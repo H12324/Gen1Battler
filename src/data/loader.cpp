@@ -1,33 +1,106 @@
 #include "data/loader.hpp"
 #include "data/game_data.hpp"
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
-// In a real scenario, we would parse JSON here.
-// For this task, we will hardcode some data to verify the structure works.
+// Helper function to parse type string to enum
+PokeType parseType(const std::string& typeStr) {
+    if (typeStr == "Normal") return PokeType::Normal;
+    if (typeStr == "Fire") return PokeType::Fire;
+    if (typeStr == "Water") return PokeType::Water;
+    if (typeStr == "Grass") return PokeType::Grass;
+    if (typeStr == "Electric") return PokeType::Electric;
+    if (typeStr == "Ice") return PokeType::Ice;
+    if (typeStr == "Fighting") return PokeType::Fighting;
+    if (typeStr == "Poison") return PokeType::Poison;
+    if (typeStr == "Ground") return PokeType::Ground;
+    if (typeStr == "Flying") return PokeType::Flying;
+    if (typeStr == "Psychic") return PokeType::Psychic;
+    if (typeStr == "Bug") return PokeType::Bug;
+    if (typeStr == "Rock") return PokeType::Rock;
+    if (typeStr == "Ghost") return PokeType::Ghost;
+    if (typeStr == "Dragon") return PokeType::Dragon;
+    return PokeType::None;
+}
+
+// Helper to extract value from JSON line
+std::string extractValue(const std::string& line, const std::string& key) {
+    size_t pos = line.find("\"" + key + "\"");
+    if (pos == std::string::npos) return "";
+    
+    pos = line.find(":", pos);
+    if (pos == std::string::npos) return "";
+    
+    pos = line.find_first_not_of(" \t:", pos + 1);
+    if (pos == std::string::npos) return "";
+    
+    size_t end = line.find_first_of(",}", pos);
+    std::string value = line.substr(pos, end - pos);
+    
+    // Remove quotes if present
+    if (!value.empty() && value[0] == '"') {
+        value = value.substr(1, value.length() - 2);
+    }
+    
+    return value;
+}
 
 void load_species(const std::string &path) {
     std::cout << "Loading species from: " << path << "\n";
     auto& gd = GameData::getInstance();
     
-    // Pikachu
-    gd.addSpecies("Pikachu", {
-        "Pikachu", 35, 55, 40, 90, 50, PokeType::Electric, PokeType::None
-    });
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        std::cerr << "Warning: Could not open " << path << ", using fallback data\n";
+        // Fallback to hardcoded data
+        gd.addSpecies("Pikachu", {"Pikachu", 35, 55, 30, 90, 50, PokeType::Electric, PokeType::None});
+        gd.addSpecies("Bulbasaur", {"Bulbasaur", 45, 49, 49, 45, 65, PokeType::Grass, PokeType::Poison});
+        return;
+    }
     
-    // Bulbasaur
-    gd.addSpecies("Bulbasaur", {
-        "Bulbasaur", 45, 49, 49, 45, 65, PokeType::Grass, PokeType::Poison
-    });
+    std::string line;
+    std::string currentPokemon;
+    std::string buffer;
     
-    // Charmander
-    gd.addSpecies("Charmander", {
-        "Charmander", 39, 52, 43, 65, 50, PokeType::Fire, PokeType::None
-    });
+    while (std::getline(file, line)) {
+        // Skip empty lines and braces
+        if (line.find('{') != std::string::npos && line.find('}') == std::string::npos) {
+            continue;
+        }
+        if (line.find('}') != std::string::npos && line.find('{') == std::string::npos) {
+            continue;
+        }
+        
+        // Find Pokemon name
+        size_t nameStart = line.find('"');
+        if (nameStart != std::string::npos) {
+            size_t nameEnd = line.find('"', nameStart + 1);
+            if (nameEnd != std::string::npos) {
+                currentPokemon = line.substr(nameStart + 1, nameEnd - nameStart - 1);
+                
+                // Check if this line has the full data
+                if (line.find("hp") != std::string::npos) {
+                    // Parse the stats from this line
+                    int hp = std::stoi(extractValue(line, "hp"));
+                    int attack = std::stoi(extractValue(line, "attack"));
+                    int defense = std::stoi(extractValue(line, "defense"));
+                    int speed = std::stoi(extractValue(line, "speed"));
+                    int special = std::stoi(extractValue(line, "special"));
+                    PokeType type1 = parseType(extractValue(line, "type1"));
+                    PokeType type2 = parseType(extractValue(line, "type2"));
+                    
+                    gd.addSpecies(currentPokemon, {
+                        currentPokemon, hp, attack, defense, speed, special, type1, type2
+                    });
+                }
+            }
+        }
+    }
     
-    // Squirtle
-    gd.addSpecies("Squirtle", {
-        "Squirtle", 44, 48, 65, 43, 50, PokeType::Water, PokeType::None
-    });
+    file.close();
+    std::cout << "Loaded species data successfully\n";
 }
 
 void load_moves(const std::string &path) {
