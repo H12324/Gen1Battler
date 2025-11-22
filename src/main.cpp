@@ -1,6 +1,7 @@
 #include <iostream>
 #include "core/battle.hpp"
 #include "data/loader.hpp"
+#include "ui/cli.hpp"
 
 int main() {
     std::cout << "Pokemon Gen 1 Battler\n";
@@ -11,14 +12,20 @@ int main() {
 
     Battle battle;
     
-    std::cout << "Player 1: " << battle.active1.name() << " (Lvl " << battle.active1.level() << ")\n";
-    std::cout << "HP: " << battle.active1.hp() << "/" << battle.active1.max_hp() << "\n";
-    std::cout << "Atk: " << battle.active1.stat(PokeStat::Attack) << "\n";
+    // Give Pokemon some moves
+    const MoveData* tackle = GameData::getInstance().getMove("Tackle");
+    const MoveData* thundershock = GameData::getInstance().getMove("ThunderShock");
     
-    std::cout << "Player 2: " << battle.active2.name() << " (Lvl " << battle.active2.level() << ")\n";
-    std::cout << "HP: " << battle.active2.hp() << "/" << battle.active2.max_hp() << "\n";
+    if (tackle) {
+        battle.active1.add_move(Move(tackle));
+        battle.active2.add_move(Move(tackle));
+    }
+    if (thundershock) {
+        battle.active1.add_move(Move(thundershock));
+    }
     
-    battle.run();
+    // Run the CLI battle
+    run_cli(battle);
     
     return 0;
 }

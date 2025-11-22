@@ -5,7 +5,7 @@
 #include <iostream>
 
 Pokemon::Pokemon(const std::string& species_name, int level) 
-    : level_(level), status_(PokeStatus::None) {
+    : level_(level), status_(PokeStatus::None), move_count_(0) {
     
     species_ = GameData::getInstance().getSpecies(species_name);
     if (!species_) {
@@ -62,6 +62,20 @@ int Pokemon::level() const { return level_; }
 PokeType Pokemon::type1() const { return species_->type1; }
 PokeType Pokemon::type2() const { return species_->type2; }
 PokeStatus Pokemon::status() const { return status_; }
+
+void Pokemon::add_move(const Move& move) {
+    if (move_count_ < 4) {
+        moves_[move_count_++] = move;
+    }
+}
+
+const Move& Pokemon::get_move(int index) const {
+    return moves_[index];
+}
+
+int Pokemon::move_count() const {
+    return move_count_;
+}
 
 void Pokemon::take_damage(int dmg) { 
     current_hp_ -= dmg; 

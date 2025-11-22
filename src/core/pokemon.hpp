@@ -23,6 +23,11 @@ public:
     PokeType type1() const;
     PokeType type2() const;
     PokeStatus status() const;
+    
+    // Move management
+    void add_move(const Move& move);
+    const Move& get_move(int index) const;
+    int move_count() const;
 
 private:
     void calculate_stats();
@@ -45,4 +50,5 @@ private:
     
     // Moves
     std::array<Move, 4> moves_;
+    int move_count_;
 };
