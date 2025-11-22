@@ -6,7 +6,7 @@
 
 class Battle {
 public:
-    Battle() : active1("Test", 0, 0, 0, 0, 0, 1), active2("Real", 0, 0, 0, 0, 0, 1) {
+    Battle() : active1("Pikachu", 5), active2("Bulbasaur", 5) {
         team1.push_back(active1);
         team2.push_back(active2);
     }

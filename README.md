@@ -40,12 +40,29 @@ ctest --test-dir build -C Debug --verbose
 Notes:
 - The test helper `cmake/FetchCatch2.cmake` uses CMake's FetchContent to pull Catch2 v2.13.10.
 - The data loader in `src/data/loader.*` is a stub. For JSON parsing add a library like `nlohmann/json` and update CMake accordingly.
-#### Gen 1 Battle Simulator.
+## How to Run
 
-Could be a fun project. If not well it won't last long.
+1. **Build**:
+   ```bash
+   cmake -S . -B build
+   cmake --build build
+   ```
 
-Goal: 
-- Be able to simulate the gen 1 ai and most moves/mons.
-- (Optional) Make it modular and expandable
-- (Optional) Basic multiplayer
-- (Optional) Graphical Component
+2. **Run**:
+   ```bash
+   .\build\src\Debug\battler_app.exe
+   ```
+
+## Output Example
+```
+Pokemon Gen 1 Battler
+Loading species from: data/species.json
+Loading moves from: data/moves.json
+(stub) load_type_chart from: data/type_chart.json  
+Player 1: Pikachu (Lvl 5)
+HP: 20/20
+Atk: 12
+Player 2: Bulbasaur (Lvl 5)
+HP: 21/21
+Running a tiny demo battle (skeleton).
+```

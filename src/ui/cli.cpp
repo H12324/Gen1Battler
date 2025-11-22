@@ -14,6 +14,6 @@ void run_cli(Battle &b) {
     }
 }
 
-void print_mon(Pokemon mon) {
+void print_mon(const Pokemon& mon) {
 	cout << mon.name() << " HP: " << mon.hp() << "\n";
 }

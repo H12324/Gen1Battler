@@ -4,6 +4,6 @@
 
 class Battle;
 void run_cli(Battle &b);
-void print_mon(class Pokemon mon);
+void print_mon(const Pokemon& mon);
 
 void listPossibleMoves();
