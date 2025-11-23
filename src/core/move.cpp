@@ -1,4 +1,4 @@
-#include "core/move.hpp"
+#include "move.hpp"
 
 // move is a plain-old-data type with default behavior. Implementation file
 // kept to match requested layout.
