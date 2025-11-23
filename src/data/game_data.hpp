@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <vector>
 
-
 struct SpeciesData {
   std::string name;
   int hp;
@@ -61,6 +60,22 @@ public:
       return type_chart.at(attack).at(defend);
     }
     return 1.0f;
+  }
+
+  std::vector<std::string> getAllSpeciesNames() const {
+    std::vector<std::string> names;
+    for (const auto &pair : species_map) {
+      names.push_back(pair.first);
+    }
+    return names;
+  }
+
+  std::vector<std::string> getAllMoveNames() const {
+    std::vector<std::string> names;
+    for (const auto &pair : move_map) {
+      names.push_back(pair.first);
+    }
+    return names;
   }
 
 private:

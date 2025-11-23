@@ -17,5 +17,7 @@ target_include_directories(battler PUBLIC
     ${CMAKE_SOURCE_DIR}/src
 )
 
+target_link_libraries(battler PUBLIC nlohmann_json::nlohmann_json)
+
 add_executable(battler_app main.cpp)
 target_link_libraries(battler_app PRIVATE battler)
