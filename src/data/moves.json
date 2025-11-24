@@ -11,21 +11,34 @@
     "category": "Physical",
     "power": 50,
     "accuracy": 100,
-    "pp": 25
+    "pp": 25,
+    "effect": {
+      "type": "high_crit"
+    }
   },
   "Double Slap": {
     "type": "Normal",
     "category": "Physical",
     "power": 15,
     "accuracy": 85,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "multi_hit",
+      "min": 2,
+      "max": 5
+    }
   },
   "Comet Punch": {
     "type": "Normal",
     "category": "Physical",
     "power": 18,
     "accuracy": 85,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "multi_hit",
+      "min": 2,
+      "max": 5
+    }
   },
   "Mega Punch": {
     "type": "Normal",
@@ -46,21 +59,36 @@
     "category": "Physical",
     "power": 75,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Burn",
+      "chance": 10
+    }
   },
   "Ice Punch": {
     "type": "Ice",
     "category": "Physical",
     "power": 75,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Freeze",
+      "chance": 10
+    }
   },
   "Thunder Punch": {
     "type": "Electric",
     "category": "Physical",
     "power": 75,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 10
+    }
   },
   "Scratch": {
     "type": "Normal",
@@ -81,21 +109,33 @@
     "category": "Physical",
     "power": 1,
     "accuracy": 30,
-    "pp": 5
+    "pp": 5,
+    "effect": {
+      "type": "ohko"
+    }
   },
   "Razor Wind": {
     "type": "Normal",
     "category": "Special",
     "power": 80,
     "accuracy": 75,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "high_crit"
+    }
   },
   "Swords Dance": {
     "type": "Normal",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Attack",
+      "stages": 2,
+      "target": "self"
+    }
   },
   "Cut": {
     "type": "Normal",
@@ -158,14 +198,22 @@
     "category": "Physical",
     "power": 65,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 30
+    }
   },
   "Double Kick": {
     "type": "Fighting",
     "category": "Physical",
     "power": 30,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "two_hit"
+    }
   },
   "Mega Kick": {
     "type": "Normal",
@@ -186,7 +234,12 @@
     "category": "Physical",
     "power": 60,
     "accuracy": 85,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 30
+    }
   },
   "Sand Attack": {
     "type": "Normal",
@@ -200,7 +253,12 @@
     "category": "Physical",
     "power": 70,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 30
+    }
   },
   "Horn Attack": {
     "type": "Normal",
@@ -214,14 +272,22 @@
     "category": "Physical",
     "power": 15,
     "accuracy": 85,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "multi_hit",
+      "min": 2,
+      "max": 5
+    }
   },
   "Horn Drill": {
     "type": "Normal",
     "category": "Physical",
     "power": 1,
     "accuracy": 30,
-    "pp": 5
+    "pp": 5,
+    "effect": {
+      "type": "ohko"
+    }
   },
   "Tackle": {
     "type": "Normal",
@@ -235,7 +301,12 @@
     "category": "Physical",
     "power": 85,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 30
+    }
   },
   "Wrap": {
     "type": "Normal",
@@ -249,7 +320,11 @@
     "category": "Physical",
     "power": 90,
     "accuracy": 85,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "recoil",
+      "percent": 25
+    }
   },
   "Thrash": {
     "type": "Normal",
@@ -263,56 +338,101 @@
     "category": "Physical",
     "power": 100,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "recoil",
+      "percent": 33
+    }
   },
   "Tail Whip": {
     "type": "Normal",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": -1,
+      "target": "opponent"
+    }
   },
   "Poison Sting": {
     "type": "Poison",
     "category": "Physical",
     "power": 15,
     "accuracy": 100,
-    "pp": 35
+    "pp": 35,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Poison",
+      "chance": 20
+    }
   },
   "Twineedle": {
     "type": "Bug",
     "category": "Physical",
     "power": 25,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "two_hit"
+    },
+    "secondary_effect": {
+      "type": "status",
+      "status": "Poison",
+      "chance": 20
+    }
   },
   "Pin Missile": {
     "type": "Bug",
     "category": "Physical",
     "power": 14,
     "accuracy": 85,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "multi_hit",
+      "min": 2,
+      "max": 5
+    }
   },
   "Leer": {
     "type": "Normal",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": -1,
+      "target": "opponent"
+    }
   },
   "Bite": {
     "type": "Normal",
     "category": "Physical",
     "power": 60,
     "accuracy": 100,
-    "pp": 25
+    "pp": 25,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 10
+    }
   },
   "Growl": {
     "type": "Normal",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Attack",
+      "stages": -1,
+      "target": "opponent"
+    }
   },
   "Roar": {
     "type": "Normal",
@@ -326,21 +446,33 @@
     "category": "Status",
     "power": 0,
     "accuracy": 55,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "status",
+      "status": "Sleep"
+    }
   },
   "Supersonic": {
     "type": "Normal",
     "category": "Status",
     "power": 0,
     "accuracy": 55,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "confusion"
+    }
   },
   "Sonic Boom": {
     "type": "Normal",
     "category": "Special",
     "power": 1,
     "accuracy": 90,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "fixed_damage",
+      "damage_type": "constant",
+      "value": 20
+    }
   },
   "Disable": {
     "type": "Normal",
@@ -354,21 +486,38 @@
     "category": "Special",
     "power": 40,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "secondary_effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": -1,
+      "target": "opponent",
+      "chance": 33
+    }
   },
   "Ember": {
     "type": "Fire",
     "category": "Special",
     "power": 40,
     "accuracy": 100,
-    "pp": 25
+    "pp": 25,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Burn",
+      "chance": 10
+    }
   },
   "Flamethrower": {
     "type": "Fire",
     "category": "Special",
     "power": 95,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Burn",
+      "chance": 10
+    }
   },
   "Mist": {
     "type": "Ice",
@@ -403,35 +552,63 @@
     "category": "Special",
     "power": 95,
     "accuracy": 100,
-    "pp": 10
+    "pp": 10,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Freeze",
+      "chance": 10
+    }
   },
   "Blizzard": {
     "type": "Ice",
     "category": "Special",
     "power": 120,
     "accuracy": 90,
-    "pp": 5
+    "pp": 5,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Freeze",
+      "chance": 10
+    }
   },
   "Psybeam": {
     "type": "Psychic",
     "category": "Special",
     "power": 65,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "secondary_effect": {
+      "type": "confusion",
+      "chance": 10
+    }
   },
   "Bubble Beam": {
     "type": "Water",
     "category": "Special",
     "power": 65,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "secondary_effect": {
+      "type": "stat_change",
+      "stat": "Speed",
+      "stages": -1,
+      "target": "opponent",
+      "chance": 33
+    }
   },
   "Aurora Beam": {
     "type": "Ice",
     "category": "Special",
     "power": 65,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "secondary_effect": {
+      "type": "stat_change",
+      "stat": "Attack",
+      "stages": -1,
+      "target": "opponent",
+      "chance": 33
+    }
   },
   "Hyper Beam": {
     "type": "Normal",
@@ -459,14 +636,23 @@
     "category": "Physical",
     "power": 80,
     "accuracy": 80,
-    "pp": 25
+    "pp": 25,
+    "effect": {
+      "type": "recoil",
+      "percent": 25
+    }
   },
   "Low Kick": {
     "type": "Fighting",
     "category": "Physical",
     "power": 50,
     "accuracy": 90,
-    "pp": 20
+    "pp": 20,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 30
+    }
   },
   "Counter": {
     "type": "Fighting",
@@ -480,7 +666,11 @@
     "category": "Physical",
     "power": 1,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "fixed_damage",
+      "damage_type": "level"
+    }
   },
   "Strength": {
     "type": "Normal",
@@ -494,14 +684,22 @@
     "category": "Special",
     "power": 20,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "drain",
+      "percent": 50
+    }
   },
   "Mega Drain": {
     "type": "Grass",
     "category": "Special",
     "power": 40,
     "accuracy": 100,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "drain",
+      "percent": 50
+    }
   },
   "Leech Seed": {
     "type": "Grass",
@@ -515,14 +713,23 @@
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Special",
+      "stages": 1,
+      "target": "self"
+    }
   },
   "Razor Leaf": {
     "type": "Grass",
     "category": "Physical",
     "power": 55,
     "accuracy": 95,
-    "pp": 25
+    "pp": 25,
+    "effect": {
+      "type": "high_crit"
+    }
   },
   "Solar Beam": {
     "type": "Grass",
@@ -536,21 +743,33 @@
     "category": "Status",
     "power": 0,
     "accuracy": 75,
-    "pp": 35
+    "pp": 35,
+    "effect": {
+      "type": "status",
+      "status": "Poison"
+    }
   },
   "Stun Spore": {
     "type": "Grass",
     "category": "Status",
     "power": 0,
     "accuracy": 75,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "status",
+      "status": "Paralysis"
+    }
   },
   "Sleep Powder": {
     "type": "Grass",
     "category": "Status",
     "power": 0,
     "accuracy": 75,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "status",
+      "status": "Sleep"
+    }
   },
   "Petal Dance": {
     "type": "Grass",
@@ -564,14 +783,25 @@
     "category": "Status",
     "power": 0,
     "accuracy": 95,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Speed",
+      "stages": -1,
+      "target": "opponent"
+    }
   },
   "Dragon Rage": {
     "type": "Dragon",
     "category": "Special",
     "power": 1,
     "accuracy": 100,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "fixed_damage",
+      "damage_type": "constant",
+      "value": 40
+    }
   },
   "Fire Spin": {
     "type": "Fire",
@@ -585,28 +815,47 @@
     "category": "Special",
     "power": 40,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 10
+    }
   },
   "Thunderbolt": {
     "type": "Electric",
     "category": "Special",
     "power": 95,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 10
+    }
   },
   "Thunder Wave": {
     "type": "Electric",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "status",
+      "status": "Paralysis"
+    }
   },
   "Thunder": {
     "type": "Electric",
     "category": "Special",
     "power": 120,
     "accuracy": 70,
-    "pp": 10
+    "pp": 10,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 10
+    }
   },
   "Rock Throw": {
     "type": "Rock",
@@ -627,7 +876,10 @@
     "category": "Physical",
     "power": 1,
     "accuracy": 30,
-    "pp": 5
+    "pp": 5,
+    "effect": {
+      "type": "ohko"
+    }
   },
   "Dig": {
     "type": "Ground",
@@ -641,42 +893,73 @@
     "category": "Status",
     "power": 0,
     "accuracy": 85,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "status",
+      "status": "Toxic"
+    }
   },
   "Confusion": {
     "type": "Psychic",
     "category": "Special",
     "power": 50,
     "accuracy": 100,
-    "pp": 25
+    "pp": 25,
+    "secondary_effect": {
+      "type": "confusion",
+      "chance": 10
+    }
   },
   "Psychic": {
     "type": "Psychic",
     "category": "Special",
     "power": 90,
     "accuracy": 100,
-    "pp": 10
+    "pp": 10,
+    "secondary_effect": {
+      "type": "stat_change",
+      "stat": "Special",
+      "stages": -1,
+      "target": "opponent",
+      "chance": 33
+    }
   },
   "Hypnosis": {
     "type": "Psychic",
     "category": "Status",
     "power": 0,
     "accuracy": 60,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "status",
+      "status": "Sleep"
+    }
   },
   "Meditate": {
     "type": "Psychic",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Attack",
+      "stages": 1,
+      "target": "self"
+    }
   },
   "Agility": {
     "type": "Psychic",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Speed",
+      "stages": 2,
+      "target": "self"
+    }
   },
   "Quick Attack": {
     "type": "Normal",
@@ -704,7 +987,11 @@
     "category": "Special",
     "power": 1,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "fixed_damage",
+      "damage_type": "level"
+    }
   },
   "Mimic": {
     "type": "Normal",
@@ -718,7 +1005,20 @@
     "category": "Status",
     "power": 0,
     "accuracy": 85,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": -2,
+      "target": "opponent"
+    }
+  },
+  "Double Team": {
+    "type": "Normal",
+    "category": "Status",
+    "power": 0,
+    "accuracy": 100,
+    "pp": 15
   },
   "Recover": {
     "type": "Normal",
@@ -732,7 +1032,13 @@
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": 1,
+      "target": "self"
+    }
   },
   "Minimize": {
     "type": "Normal",
@@ -753,28 +1059,49 @@
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "confusion"
+    }
   },
   "Withdraw": {
     "type": "Water",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": 1,
+      "target": "self"
+    }
   },
   "Defense Curl": {
     "type": "Normal",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": 1,
+      "target": "self"
+    }
   },
   "Barrier": {
     "type": "Psychic",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": 2,
+      "target": "self"
+    }
   },
   "Light Screen": {
     "type": "Psychic",
@@ -788,7 +1115,10 @@
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "haze"
+    }
   },
   "Reflect": {
     "type": "Psychic",
@@ -844,35 +1174,60 @@
     "category": "Physical",
     "power": 20,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 30
+    }
   },
   "Smog": {
     "type": "Poison",
     "category": "Special",
     "power": 20,
     "accuracy": 70,
-    "pp": 20
+    "pp": 20,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Poison",
+      "chance": 40
+    }
   },
   "Sludge": {
     "type": "Poison",
     "category": "Special",
     "power": 65,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Poison",
+      "chance": 40
+    }
   },
   "Bone Club": {
     "type": "Ground",
     "category": "Physical",
     "power": 65,
     "accuracy": 85,
-    "pp": 20
+    "pp": 20,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 10
+    }
   },
   "Fire Blast": {
     "type": "Fire",
     "category": "Special",
     "power": 120,
     "accuracy": 85,
-    "pp": 5
+    "pp": 5,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Burn",
+      "chance": 30
+    }
   },
   "Waterfall": {
     "type": "Water",
@@ -907,21 +1262,39 @@
     "category": "Physical",
     "power": 20,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "multi_hit",
+      "min": 2,
+      "max": 5
+    }
   },
   "Constrict": {
     "type": "Normal",
     "category": "Physical",
     "power": 10,
     "accuracy": 100,
-    "pp": 35
+    "pp": 35,
+    "secondary_effect": {
+      "type": "stat_change",
+      "stat": "Speed",
+      "stages": -1,
+      "target": "opponent",
+      "chance": 33
+    }
   },
   "Amnesia": {
     "type": "Psychic",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Special",
+      "stages": 2,
+      "target": "self"
+    }
   },
   "Kinesis": {
     "type": "Psychic",
@@ -937,7 +1310,7 @@
     "accuracy": 100,
     "pp": 10
   },
-  "High Jump Kick": {
+  "Hi Jump Kick": {
     "type": "Fighting",
     "category": "Physical",
     "power": 85,
@@ -949,42 +1322,67 @@
     "category": "Status",
     "power": 0,
     "accuracy": 75,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "status",
+      "status": "Paralysis"
+    }
   },
   "Dream Eater": {
     "type": "Psychic",
     "category": "Special",
     "power": 100,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "drain",
+      "percent": 50
+    }
   },
   "Poison Gas": {
     "type": "Poison",
     "category": "Status",
     "power": 0,
     "accuracy": 55,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "status",
+      "status": "Poison"
+    }
   },
   "Barrage": {
     "type": "Normal",
     "category": "Physical",
     "power": 15,
     "accuracy": 85,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "multi_hit",
+      "min": 2,
+      "max": 5
+    }
   },
   "Leech Life": {
     "type": "Bug",
     "category": "Physical",
     "power": 20,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "drain",
+      "percent": 50
+    }
   },
   "Lovely Kiss": {
     "type": "Normal",
     "category": "Status",
     "power": 0,
     "accuracy": 75,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "status",
+      "status": "Sleep"
+    }
   },
   "Sky Attack": {
     "type": "Flying",
@@ -1005,7 +1403,14 @@
     "category": "Special",
     "power": 20,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "secondary_effect": {
+      "type": "stat_change",
+      "stat": "Speed",
+      "stages": -1,
+      "target": "opponent",
+      "chance": 33
+    }
   },
   "Dizzy Punch": {
     "type": "Normal",
@@ -1019,7 +1424,11 @@
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "status",
+      "status": "Sleep"
+    }
   },
   "Flash": {
     "type": "Normal",
@@ -1047,14 +1456,23 @@
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 40
+    "pp": 40,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Defense",
+      "stages": 2,
+      "target": "self"
+    }
   },
   "Crabhammer": {
     "type": "Water",
     "category": "Physical",
     "power": 90,
     "accuracy": 85,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "high_crit"
+    }
   },
   "Explosion": {
     "type": "Normal",
@@ -1068,14 +1486,22 @@
     "category": "Physical",
     "power": 18,
     "accuracy": 80,
-    "pp": 15
+    "pp": 15,
+    "effect": {
+      "type": "multi_hit",
+      "min": 2,
+      "max": 5
+    }
   },
   "Bonemerang": {
     "type": "Ground",
     "category": "Physical",
     "power": 50,
     "accuracy": 90,
-    "pp": 10
+    "pp": 10,
+    "effect": {
+      "type": "two_hit"
+    }
   },
   "Rest": {
     "type": "Psychic",
@@ -1089,21 +1515,37 @@
     "category": "Physical",
     "power": 75,
     "accuracy": 90,
-    "pp": 10
+    "pp": 10,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 30
+    }
   },
   "Hyper Fang": {
     "type": "Normal",
     "category": "Physical",
     "power": 80,
     "accuracy": 90,
-    "pp": 15
+    "pp": 15,
+    "secondary_effect": {
+      "type": "status",
+      "status": "Paralysis",
+      "chance": 10
+    }
   },
   "Sharpen": {
     "type": "Normal",
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30
+    "pp": 30,
+    "effect": {
+      "type": "stat_change",
+      "stat": "Attack",
+      "stages": 1,
+      "target": "self"
+    }
   },
   "Conversion": {
     "type": "Normal",
@@ -1131,7 +1573,10 @@
     "category": "Physical",
     "power": 70,
     "accuracy": 100,
-    "pp": 20
+    "pp": 20,
+    "effect": {
+      "type": "high_crit"
+    }
   },
   "Substitute": {
     "type": "Normal",
@@ -1145,6 +1590,10 @@
     "category": "Physical",
     "power": 50,
     "accuracy": 100,
-    "pp": 1
+    "pp": 1,
+    "effect": {
+      "type": "recoil",
+      "percent": 50
+    }
   }
 }
