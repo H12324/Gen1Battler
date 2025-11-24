@@ -1,9 +1,9 @@
 #include "data/loader.hpp"
 #include "data/game_data.hpp"
+#include "data/move_parser.hpp"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
-
 
 using json = nlohmann::json;
 
@@ -109,10 +109,25 @@ void load_moves(const std::string &path) {
     std::cerr << "Warning: Could not open " << path
               << ", using fallback data\n";
     // Fallback to hardcoded data
-    gd.addMove("Tackle", {"Tackle", PokeType::Normal, MoveCategory::Physical,
-                          35, 95, 35});
-    gd.addMove("Thunder Shock", {"Thunder Shock", PokeType::Electric,
-                                 MoveCategory::Special, 40, 100, 30});
+    auto tackle = std::make_unique<MoveData>();
+    tackle->name = "Tackle";
+    tackle->type = PokeType::Normal;
+    tackle->category = MoveCategory::Physical;
+    tackle->power = 35;
+    tackle->accuracy = 95;
+    tackle->max_pp = 35;
+    tackle->primary_effect.type = MoveEffectType::Damage;
+    gd.addMove("Tackle", std::move(tackle));
+
+    auto thunder_shock = std::make_unique<MoveData>();
+    thunder_shock->name = "Thunder Shock";
+    thunder_shock->type = PokeType::Electric;
+    thunder_shock->category = MoveCategory::Special;
+    thunder_shock->power = 40;
+    thunder_shock->accuracy = 100;
+    thunder_shock->max_pp = 30;
+    thunder_shock->primary_effect.type = MoveEffectType::Damage;
+    gd.addMove("Thunder Shock", std::move(thunder_shock));
     return;
   }
 
@@ -122,15 +137,35 @@ void load_moves(const std::string &path) {
 
     int count = 0;
     for (auto &[name, data] : j.items()) {
-      MoveData move;
-      move.name = name;
-      move.type = parseType(data["type"]);
-      move.category = parseCategory(data["category"]);
-      move.power = data["power"];
-      move.accuracy = data["accuracy"];
-      move.max_pp = data["pp"];
+      auto move = std::make_unique<MoveData>();
+      move->name = name;
+      move->type = parseType(data["type"]);
+      move->category = parseCategory(data["category"]);
+      move->power = data["power"];
+      move->accuracy = data["accuracy"];
+      move->max_pp = data["pp"];
 
-      gd.addMove(name, move);
+      // Parse primary effect if present
+      if (data.contains("effect")) {
+        parseMoveEffect(move->primary_effect, data["effect"]);
+      } else {
+        // Initialize default effect based on category
+        if (move->category == MoveCategory::Status) {
+          move->primary_effect.type = MoveEffectType::None;
+        } else {
+          move->primary_effect.type = MoveEffectType::Damage;
+        }
+      }
+
+      // Parse secondary effect if present
+      if (data.contains("secondary_effect")) {
+        auto secondary = std::make_unique<SecondaryEffect>();
+        secondary->chance = data["secondary_effect"].value("chance", 30);
+        parseMoveEffect(secondary->effect, data["secondary_effect"]);
+        move->secondary_effect = std::move(secondary);
+      }
+
+      gd.addMove(name, std::move(move));
       count++;
     }
 
@@ -138,10 +173,26 @@ void load_moves(const std::string &path) {
   } catch (const std::exception &e) {
     std::cerr << "Error parsing JSON: " << e.what() << "\n";
     std::cerr << "Using fallback data\n";
-    gd.addMove("Tackle", {"Tackle", PokeType::Normal, MoveCategory::Physical,
-                          35, 95, 35});
-    gd.addMove("Thunder Shock", {"Thunder Shock", PokeType::Electric,
-                                 MoveCategory::Special, 40, 100, 30});
+
+    auto tackle = std::make_unique<MoveData>();
+    tackle->name = "Tackle";
+    tackle->type = PokeType::Normal;
+    tackle->category = MoveCategory::Physical;
+    tackle->power = 35;
+    tackle->accuracy = 95;
+    tackle->max_pp = 35;
+    tackle->primary_effect.type = MoveEffectType::Damage;
+    gd.addMove("Tackle", std::move(tackle));
+
+    auto thunder_shock = std::make_unique<MoveData>();
+    thunder_shock->name = "Thunder Shock";
+    thunder_shock->type = PokeType::Electric;
+    thunder_shock->category = MoveCategory::Special;
+    thunder_shock->power = 40;
+    thunder_shock->accuracy = 100;
+    thunder_shock->max_pp = 30;
+    thunder_shock->primary_effect.type = MoveEffectType::Damage;
+    gd.addMove("Thunder Shock", std::move(thunder_shock));
   }
 
   file.close();

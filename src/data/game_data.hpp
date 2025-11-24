@@ -1,9 +1,11 @@
 #pragma once
 #include "../core/enums.hpp"
 #include "../core/move.hpp"
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 
 struct SpeciesData {
   std::string name;
@@ -36,14 +38,14 @@ public:
     return nullptr;
   }
 
-  void addMove(const std::string &name, const MoveData &data) {
-    move_map[name] = data;
+  void addMove(const std::string &name, std::unique_ptr<MoveData> data) {
+    move_map[name] = std::move(data);
   }
 
   const MoveData *getMove(const std::string &name) const {
     auto it = move_map.find(name);
     if (it != move_map.end()) {
-      return &it->second;
+      return it->second.get();
     }
     return nullptr;
   }
@@ -81,6 +83,6 @@ public:
 private:
   GameData() {}
   std::unordered_map<std::string, SpeciesData> species_map;
-  std::unordered_map<std::string, MoveData> move_map;
+  std::unordered_map<std::string, std::unique_ptr<MoveData>> move_map;
   std::unordered_map<PokeType, std::unordered_map<PokeType, float>> type_chart;
 };

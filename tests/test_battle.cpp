@@ -2,7 +2,6 @@
 #include "data/game_data.hpp"
 #include <catch2/catch.hpp>
 
-
 TEST_CASE("battle runs") {
   // Setup minimal data for test
   GameData::getInstance().addSpecies(
@@ -17,8 +16,15 @@ TEST_CASE("battle runs") {
   Pokemon p2("TestMon", 50);
 
   // Give them at least one move
-  MoveData testMove = {
-      "TestMove", PokeType::Normal, MoveCategory::Physical, 50, 100, 35};
+  MoveData testMove;
+  testMove.name = "TestMove";
+  testMove.type = PokeType::Normal;
+  testMove.category = MoveCategory::Physical;
+  testMove.power = 50;
+  testMove.accuracy = 100;
+  testMove.max_pp = 35;
+  testMove.primary_effect.type = MoveEffectType::Damage;
+
   p1.add_move(Move(&testMove));
   p2.add_move(Move(&testMove));
 

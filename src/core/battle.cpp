@@ -1,13 +1,14 @@
 #include "battle.hpp"
 #include "../engine/damage.hpp"
+#include "../engine/move_effects.hpp"
 #include <iostream>
 
 void Battle::execute_turn(int player_move_index, int ai_move_index) {
   turn++;
 
-  // Determine turn order based on Speed
-  bool player_first =
-      active1.stat(PokeStat::Speed) >= active2.stat(PokeStat::Speed);
+  // Determine turn order based on Speed (using modified stats for paralysis)
+  bool player_first = active1.get_modified_stat(PokeStat::Speed) >=
+                      active2.get_modified_stat(PokeStat::Speed);
 
   Pokemon *first = player_first ? &active1 : &active2;
   Pokemon *second = player_first ? &active2 : &active1;
@@ -17,13 +18,35 @@ void Battle::execute_turn(int player_move_index, int ai_move_index) {
   // First Pokemon attacks
   if (first->hp() > 0) {
     const Move &move = first->get_move(first_move_idx);
-    apply_move(*first, *second, move);
+
+    // Check if Pokemon can move (status conditions)
+    std::string status_message;
+    if (can_move_with_status(*first, status_message)) {
+      apply_move(*first, *second, move);
+    } else {
+      std::cout << status_message << "\n";
+    }
   }
 
   // Second Pokemon attacks (if still alive)
   if (second->hp() > 0 && first->hp() > 0) {
     const Move &move = second->get_move(second_move_idx);
-    apply_move(*second, *first, move);
+
+    // Check if Pokemon can move (status conditions)
+    std::string status_message;
+    if (can_move_with_status(*second, status_message)) {
+      apply_move(*second, *first, move);
+    } else {
+      std::cout << status_message << "\n";
+    }
+  }
+
+  // Apply end-of-turn effects (poison, burn, toxic damage)
+  if (active1.hp() > 0) {
+    apply_end_of_turn_status_damage(active1);
+  }
+  if (active2.hp() > 0) {
+    apply_end_of_turn_status_damage(active2);
   }
 
   // Sync active Pokemon back to teams
@@ -44,26 +67,55 @@ void Battle::apply_move(Pokemon &attacker, Pokemon &defender,
 
   std::cout << attacker.name() << " used " << move.data->name << "!\n";
 
-  DamageResult result = calculate_damage(attacker, defender, move);
+  // Get the move effect type
+  const MoveEffect &effect = move.data->primary_effect;
 
-  if (result.type_effectiveness == 0.0f) {
-    std::cout << "It doesn't affect " << defender.name() << "...\n";
-    return;
+  // Handle based on effect type
+  if (effect.type == MoveEffectType::Damage ||
+      effect.type == MoveEffectType::None) {
+    // Standard damage move
+    DamageResult result = calculate_damage(attacker, defender, move);
+
+    if (result.type_effectiveness == 0.0f) {
+      std::cout << "It doesn't affect " << defender.name() << "...\n";
+      return;
+    }
+
+    defender.take_damage(result.damage);
+    std::cout << defender.name() << " took " << result.damage << " damage!\n";
+
+    if (result.critical) {
+      std::cout << "Critical hit!\n";
+    }
+
+    if (result.type_effectiveness > 1.0f) {
+      std::cout << "It's super effective!\n";
+    } else if (result.type_effectiveness < 1.0f &&
+               result.type_effectiveness > 0.0f) {
+      std::cout << "It's not very effective...\n";
+    }
+  } else if (effect.type == MoveEffectType::StatChange) {
+    // Stat-changing move
+    Pokemon &target =
+        effect.stat_change.target == EffectTarget::Self ? attacker : defender;
+    apply_stat_change(target, effect.stat_change);
+  } else if (effect.type == MoveEffectType::StatusInflict) {
+    // Status-inflicting move
+    Pokemon &target = effect.status_inflict.target == EffectTarget::Self
+                          ? attacker
+                          : defender;
+    apply_status_effect(target, effect.status_inflict.status);
+  } else {
+    // For other effects, use the effects engine
+    EffectResult eff_result = apply_move_effect(attacker, defender, move.data);
+    if (!eff_result.message.empty()) {
+      std::cout << eff_result.message << "\n";
+    }
   }
 
-  defender.take_damage(result.damage);
-
-  std::cout << defender.name() << " took " << result.damage << " damage!\n";
-
-  if (result.critical) {
-    std::cout << "Critical hit!\n";
-  }
-
-  if (result.type_effectiveness > 1.0f) {
-    std::cout << "It's super effective!\n";
-  } else if (result.type_effectiveness < 1.0f &&
-             result.type_effectiveness > 0.0f) {
-    std::cout << "It's not very effective...\n";
+  // Apply secondary effects if they exist
+  if (move.data->secondary_effect) {
+    apply_secondary_effect(attacker, defender, *move.data->secondary_effect);
   }
 
   if (defender.hp() <= 0) {

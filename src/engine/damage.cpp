@@ -33,11 +33,11 @@ DamageResult calculate_damage(const Pokemon &attacker, const Pokemon &defender,
   int def = 0;
 
   if (move.data->category == MoveCategory::Physical) {
-    atk = attacker.stat(PokeStat::Attack);
-    def = defender.stat(PokeStat::Defense);
+    atk = attacker.get_modified_stat(PokeStat::Attack);
+    def = defender.get_modified_stat(PokeStat::Defense);
   } else {
-    atk = attacker.stat(PokeStat::Special);
-    def = defender.stat(PokeStat::Special);
+    atk = attacker.get_modified_stat(PokeStat::Special);
+    def = defender.get_modified_stat(PokeStat::Special);
   }
 
   // Gen 1 Crit ignores stat modifiers (not implemented yet, but good to note)
@@ -52,7 +52,8 @@ DamageResult calculate_damage(const Pokemon &attacker, const Pokemon &defender,
   // 4. Base Damage Calculation
   // ((2 * Level * Crit / 5 + 2) * Power * A / D) / 50 + 2
   int damage =
-      ((2 * level * crit_factor / 5 + 2) * move.data->power * atk / def) / 50 +
+      ((2 * level * crit_factor / 5 + 2) * move.data->power * (atk / def)) /
+          50 +
       2;
 
   // 5. STAB

@@ -3,7 +3,9 @@
 #include <iostream>
 
 Pokemon::Pokemon(const std::string &species_name, int level)
-    : level_(level), status_(PokeStatus::None), move_count_(0) {
+    : level_(level), status_(PokeStatus::None),
+      volatile_status_(VolatileStatus::None), confusion_turns_(0),
+      sleep_turns_(0), toxic_counter_(0), move_count_(0) {
 
   species_ = GameData::getInstance().getSpecies(species_name);
   if (!species_) {
@@ -75,10 +77,48 @@ int Pokemon::stat(PokeStat s) const {
   return current_stats_[static_cast<int>(s)];
 }
 
+int Pokemon::get_modified_stat(PokeStat stat) const {
+  if (stat == PokeStat::HP) {
+    return current_stats_[static_cast<int>(stat)];
+  }
+
+  int base_stat = current_stats_[static_cast<int>(stat)];
+  int stage = stat_stages_[static_cast<int>(stat)];
+
+  // Gen 1 stat stage multipliers
+  // Stages: -6 to +6
+  // Multiplier = (2 + max(stage, 0)) / (2 + max(-stage, 0))
+  double multiplier;
+  if (stage >= 0) {
+    multiplier = (2.0 + stage) / 2.0;
+  } else {
+    multiplier = 2.0 / (2.0 - stage);
+  }
+
+  int modified = static_cast<int>(base_stat * multiplier);
+
+  // Apply burn attack reduction (only for physical moves, but we apply it to
+  // Attack stat)
+  if (stat == PokeStat::Attack && status_ == PokeStatus::Burn) {
+    modified /= 2;
+  }
+
+  // Apply paralysis speed reduction
+  if (stat == PokeStat::Speed && status_ == PokeStatus::Paralysis) {
+    modified /= 4;
+  }
+
+  return modified > 0 ? modified : 1;
+}
+
 int Pokemon::level() const { return level_; }
 PokeType Pokemon::type1() const { return species_->type1; }
 PokeType Pokemon::type2() const { return species_->type2; }
 PokeStatus Pokemon::status() const { return status_; }
+VolatileStatus Pokemon::volatile_status() const { return volatile_status_; }
+int Pokemon::stat_stage(PokeStat stat) const {
+  return stat_stages_[static_cast<int>(stat)];
+}
 
 void Pokemon::add_move(const Move &move) {
   if (move_count_ < 4) {
@@ -94,4 +134,64 @@ void Pokemon::take_damage(int dmg) {
   current_hp_ -= dmg;
   if (current_hp_ < 0)
     current_hp_ = 0;
+  if (current_hp_ == 0)
+    status_ = PokeStatus::Fainted;
 }
+
+void Pokemon::heal(int amount) {
+  current_hp_ += amount;
+  if (current_hp_ > max_hp())
+    current_hp_ = max_hp();
+}
+
+bool Pokemon::apply_status(PokeStatus new_status) {
+  // Can't apply status if already has one (except None)
+  if (status_ != PokeStatus::None && status_ != PokeStatus::Fainted) {
+    return false;
+  }
+
+  // Can't apply status to fainted Pokemon
+  if (status_ == PokeStatus::Fainted) {
+    return false;
+  }
+
+  status_ = new_status;
+
+  // Initialize status-specific counters
+  if (new_status == PokeStatus::Sleep) {
+    sleep_turns_ = 1 + (rand() % 7); // 1-7 turns in Gen 1
+  } else if (new_status == PokeStatus::Toxic) {
+    toxic_counter_ = 1;
+  }
+
+  return true;
+}
+
+void Pokemon::apply_volatile_status(VolatileStatus vstatus) {
+  volatile_status_ = vstatus;
+
+  if (vstatus == VolatileStatus::Confusion) {
+    confusion_turns_ = 2 + (rand() % 4); // 2-5 turns
+  }
+}
+
+void Pokemon::clear_volatile_status() {
+  volatile_status_ = VolatileStatus::None;
+  confusion_turns_ = 0;
+}
+
+void Pokemon::modify_stat_stage(PokeStat stat, int stages) {
+  if (stat == PokeStat::HP)
+    return; // Can't modify HP stages
+
+  int &current_stage = stat_stages_[static_cast<int>(stat)];
+  current_stage += stages;
+
+  // Clamp to -6 to +6
+  if (current_stage > 6)
+    current_stage = 6;
+  if (current_stage < -6)
+    current_stage = -6;
+}
+
+void Pokemon::reset_stat_stages() { stat_stages_.fill(0); }
