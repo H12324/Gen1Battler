@@ -6,7 +6,11 @@
 void Battle::execute_turn(int player_move_index, int ai_move_index) {
   turn++;
 
-  // Determine turn order based on Speed (using modified stats for paralysis)
+  // Reset turn data
+  active1.reset_turn_data();
+  active2.reset_turn_data();
+
+  // Determine turn order based on Speed
   bool player_first = active1.get_modified_stat(PokeStat::Speed) >=
                       active2.get_modified_stat(PokeStat::Speed);
 
@@ -15,33 +19,25 @@ void Battle::execute_turn(int player_move_index, int ai_move_index) {
   int first_move_idx = player_first ? player_move_index : ai_move_index;
   int second_move_idx = player_first ? ai_move_index : player_move_index;
 
+  // Set move order flags
+  first->set_moved_first(true);
+  second->set_moved_first(false);
+
   // First Pokemon attacks
   if (first->hp() > 0) {
-    const Move &move = first->get_move(first_move_idx);
-
-    // Check if Pokemon can move (status conditions)
-    std::string status_message;
-    if (can_move_with_status(*first, status_message)) {
-      apply_move(*first, *second, move);
-    } else {
-      std::cout << status_message << "\n";
-    }
+    execute_pokemon_move(*first, *second, first_move_idx);
   }
 
-  // Second Pokemon attacks (if still alive)
+  // Second Pokemon attacks (if both alive)
   if (second->hp() > 0 && first->hp() > 0) {
-    const Move &move = second->get_move(second_move_idx);
-
-    // Check if Pokemon can move (status conditions)
-    std::string status_message;
-    if (can_move_with_status(*second, status_message)) {
-      apply_move(*second, *first, move);
-    } else {
-      std::cout << status_message << "\n";
-    }
+    execute_pokemon_move(*second, *first, second_move_idx);
   }
 
-  // Apply end-of-turn effects (poison, burn, toxic damage)
+  // End of turn updates
+  active1.update_disable();
+  active2.update_disable();
+
+  // Apply end-of-turn status damage
   if (active1.hp() > 0) {
     apply_end_of_turn_status_damage(active1);
   }
@@ -52,14 +48,45 @@ void Battle::execute_turn(int player_move_index, int ai_move_index) {
   // Sync active Pokemon back to teams
   sync_active_to_team();
 
-  // Check if battle is over (entire team defeated)
+  // Check if battle is over
   if (is_team_defeated(1) || is_team_defeated(2)) {
     over = true;
   }
 }
 
-void Battle::apply_move(Pokemon &attacker, Pokemon &defender,
-                        const Move &move) {
+void Battle::execute_pokemon_move(Pokemon &attacker, Pokemon &defender,
+                                  int move_index) {
+  Move &move = const_cast<Move &>(attacker.get_move(move_index));
+
+  // Check if move is disabled
+  if (attacker.is_move_disabled(move_index)) {
+    std::cout << attacker.name() << "'s move is disabled!\n";
+    return;
+  }
+
+  // Check PP
+  if (!move.has_pp()) {
+    std::cout << attacker.name() << " has no PP left for " << move.data->name
+              << "!\n";
+    return;
+  }
+
+  // Check status conditions
+  std::string status_message;
+  if (!can_move_with_status(attacker, status_message)) {
+    std::cout << status_message << "\n";
+    return;
+  }
+
+  // Deduct PP
+  move.deduct_pp();
+
+  // Apply move with battle context
+  apply_move(attacker, defender, move, this);
+}
+
+void Battle::apply_move(Pokemon &attacker, Pokemon &defender, const Move &move,
+                        Battle *battle) {
   if (!move.data) {
     std::cout << attacker.name() << " has no move!\n";
     return;
@@ -84,6 +111,9 @@ void Battle::apply_move(Pokemon &attacker, Pokemon &defender,
     defender.take_damage(result.damage);
     std::cout << defender.name() << " took " << result.damage << " damage!\n";
 
+    // Record damage for Counter mechanic
+    defender.record_damage_taken(result.damage, move.data);
+
     if (result.critical) {
       std::cout << "Critical hit!\n";
     }
@@ -107,7 +137,8 @@ void Battle::apply_move(Pokemon &attacker, Pokemon &defender,
     apply_status_effect(target, effect.status_inflict.status);
   } else {
     // For other effects, use the effects engine
-    EffectResult eff_result = apply_move_effect(attacker, defender, move.data);
+    EffectResult eff_result =
+        apply_move_effect(attacker, defender, move.data, battle);
     if (!eff_result.message.empty()) {
       std::cout << eff_result.message << "\n";
     }

@@ -3,6 +3,8 @@
 #include "../core/pokemon.hpp"
 #include <string>
 
+// Forward declaration
+class Battle;
 
 // Result of applying a move effect
 struct EffectResult {
@@ -21,7 +23,7 @@ struct EffectResult {
 
 // Apply a move's primary effect
 EffectResult apply_move_effect(Pokemon &attacker, Pokemon &defender,
-                               const MoveData *move_data);
+                               const MoveData *move_data, Battle *battle);
 
 // Apply secondary effects (chance-based)
 void apply_secondary_effect(Pokemon &attacker, Pokemon &defender,

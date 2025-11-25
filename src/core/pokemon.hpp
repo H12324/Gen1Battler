@@ -63,7 +63,42 @@ private:
   int sleep_turns_;
   int toxic_counter_; // For Toxic damage calculation
 
+  // Turn-specific data (reset each turn)
+  struct TurnData {
+    int damage_taken = 0;
+    bool moved_first = false;
+    const MoveData *last_move_hit_by = nullptr;
+  };
+  TurnData turn_data_;
+
+  // Move locking (for Rage, Thrash, etc.)
+  bool locked_into_move_ = false;
+  const MoveData *locked_move_ = nullptr;
+  int lock_turns_remaining_ = 0;
+
+  // Disabled move tracking
+  int disabled_move_index_ = -1;
+  int disable_turns_remaining_ = 0;
+
   // Moves
   std::array<Move, 4> moves_;
   int move_count_;
+
+public:
+  // Turn data access
+  void reset_turn_data();
+  void set_moved_first(bool first);
+  void record_damage_taken(int damage, const MoveData *move);
+  const TurnData &get_turn_data() const;
+
+  // Move locking
+  void lock_into_move(const MoveData *move, int turns);
+  void unlock_move();
+  bool is_locked() const;
+  const MoveData *get_locked_move() const;
+
+  // Disable
+  void disable_move(int move_index, int turns);
+  void update_disable();
+  bool is_move_disabled(int move_index) const;
 };

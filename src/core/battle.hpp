@@ -26,7 +26,10 @@ public:
   Pokemon active2;
 
 private:
-  void apply_move(Pokemon &attacker, Pokemon &defender, const Move &move);
+  void execute_pokemon_move(Pokemon &attacker, Pokemon &defender,
+                            int move_index);
+  void apply_move(Pokemon &attacker, Pokemon &defender, const Move &move,
+                  Battle *battle);
   int get_next_available_pokemon(int team_num) const;
   void sync_active_to_team();
 

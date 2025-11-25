@@ -195,3 +195,53 @@ void Pokemon::modify_stat_stage(PokeStat stat, int stages) {
 }
 
 void Pokemon::reset_stat_stages() { stat_stages_.fill(0); }
+
+// Turn data methods
+void Pokemon::reset_turn_data() { turn_data_ = TurnData(); }
+
+void Pokemon::set_moved_first(bool first) { turn_data_.moved_first = first; }
+
+void Pokemon::record_damage_taken(int damage, const MoveData *move) {
+  turn_data_.damage_taken += damage;
+  turn_data_.last_move_hit_by = move;
+}
+
+const Pokemon::TurnData &Pokemon::get_turn_data() const { return turn_data_; }
+
+// Move locking methods
+void Pokemon::lock_into_move(const MoveData *move, int turns) {
+  locked_into_move_ = true;
+  locked_move_ = move;
+  lock_turns_remaining_ = turns;
+}
+
+void Pokemon::unlock_move() {
+  locked_into_move_ = false;
+  locked_move_ = nullptr;
+  lock_turns_remaining_ = 0;
+}
+
+bool Pokemon::is_locked() const {
+  return locked_into_move_ && lock_turns_remaining_ > 0;
+}
+
+const MoveData *Pokemon::get_locked_move() const { return locked_move_; }
+
+// Disable methods
+void Pokemon::disable_move(int move_index, int turns) {
+  disabled_move_index_ = move_index;
+  disable_turns_remaining_ = turns;
+}
+
+void Pokemon::update_disable() {
+  if (disable_turns_remaining_ > 0) {
+    disable_turns_remaining_--;
+    if (disable_turns_remaining_ == 0) {
+      disabled_move_index_ = -1;
+    }
+  }
+}
+
+bool Pokemon::is_move_disabled(int move_index) const {
+  return disabled_move_index_ == move_index && disable_turns_remaining_ > 0;
+}

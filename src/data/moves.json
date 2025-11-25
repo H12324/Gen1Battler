@@ -637,27 +637,6 @@
     "power": 80,
     "accuracy": 80,
     "pp": 25,
-    "effect": {
-      "type": "recoil",
-      "percent": 25
-    }
-  },
-  "Low Kick": {
-    "type": "Fighting",
-    "category": "Physical",
-    "power": 50,
-    "accuracy": 90,
-    "pp": 20,
-    "secondary_effect": {
-      "type": "status",
-      "status": "Paralysis",
-      "chance": 30
-    }
-  },
-  "Counter": {
-    "type": "Fighting",
-    "category": "Physical",
-    "power": 1,
     "accuracy": 100,
     "pp": 20
   },

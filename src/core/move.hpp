@@ -2,7 +2,6 @@
 #include <memory>
 #include <string>
 
-
 #include "enums.hpp"
 #include "move_effect.hpp"
 
@@ -30,4 +29,16 @@ struct Move {
 
   Move() : data(nullptr), current_pp(0), pp_ups(0) {}
   Move(const MoveData *d) : data(d), current_pp(d ? d->max_pp : 0), pp_ups(0) {}
+
+  // PP helper methods
+  int max_pp() const { return data ? data->max_pp : 0; }
+  bool has_pp() const { return current_pp > 0; }
+  void deduct_pp() {
+    if (current_pp > 0)
+      current_pp--;
+  }
+  void restore_pp(int amount) {
+    if (data)
+      current_pp = std::min(current_pp + amount, data->max_pp);
+  }
 };

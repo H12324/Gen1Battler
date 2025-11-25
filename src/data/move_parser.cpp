@@ -91,6 +91,19 @@ void parseMoveEffect(MoveEffect &effect, const json &effectData) {
     }
   } else if (effectType == "confusion") {
     effect.type = MoveEffectType::Confusion;
+  } else if (effectType == "flinch") {
+    effect.type = MoveEffectType::Flinch;
+    effect.flinch_chance = effectData.value("chance", 100);
+  } else if (effectType == "counter") {
+    effect.type = MoveEffectType::Counter;
+  } else if (effectType == "two_turn") {
+    effect.type = MoveEffectType::TwoTurn;
+    effect.two_turn.invulnerable = effectData.value("invulnerable", false);
+    effect.two_turn.charge_message = effectData.value("charge_message", "");
+  } else if (effectType == "rage") {
+    effect.type = MoveEffectType::Rage;
+  } else if (effectType == "disable") {
+    effect.type = MoveEffectType::Disable;
   } else if (effectType == "haze") {
     effect.type = MoveEffectType::Haze;
   } else if (effectType == "high_crit") {

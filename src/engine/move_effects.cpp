@@ -4,9 +4,8 @@
 #include <cmath>
 #include <iostream>
 
-
 EffectResult apply_move_effect(Pokemon &attacker, Pokemon &defender,
-                               const MoveData *move_data) {
+                               const MoveData *move_data, Battle *battle) {
   EffectResult result;
 
   if (!move_data) {
@@ -118,6 +117,94 @@ EffectResult apply_move_effect(Pokemon &attacker, Pokemon &defender,
     break;
   }
 
+  case MoveEffectType::Flinch: {
+    // Check flinch chance
+    int roll = rng_int(1, 100);
+    if (roll <= effect.flinch_chance) {
+      result.success = apply_volatile_effect(defender, VolatileStatus::Flinch);
+      if (result.success) {
+        result.message = defender.name() + " flinched!";
+      }
+    }
+    break;
+  }
+
+  case MoveEffectType::Counter: {
+    const auto &turn_data = defender.get_turn_data();
+
+    // Counter fails if opponent didn't move first or no damage taken
+    if (!turn_data.moved_first || turn_data.damage_taken == 0) {
+      result.success = false;
+      result.message = "But it failed!";
+      break;
+    }
+
+    // Gen 1: Counter only works on Normal/Fighting type moves
+    if (turn_data.last_move_hit_by) {
+      PokeType move_type = turn_data.last_move_hit_by->type;
+      if (move_type != PokeType::Normal && move_type != PokeType::Fighting) {
+        result.success = false;
+        result.message = "But it failed!";
+        break;
+      }
+    }
+
+    // Deal 2x damage taken
+    result.damage = turn_data.damage_taken * 2;
+    result.success = true;
+    break;
+  }
+
+  case MoveEffectType::TwoTurn: {
+    if (attacker.volatile_status() == VolatileStatus::Charging) {
+      // Turn 2: Execute attack
+      Move temp_move(move_data);
+      DamageResult dmg = calculate_damage(attacker, defender, temp_move);
+      result.damage = dmg.damage;
+      result.success = true;
+      attacker.clear_volatile_status();
+    } else {
+      // Turn 1: Charge
+      attacker.apply_volatile_status(VolatileStatus::Charging);
+      result.success = true;
+      result.message = effect.two_turn.charge_message;
+    }
+    break;
+  }
+
+  case MoveEffectType::Rage: {
+    // Deal damage
+    Move temp_move(move_data);
+    DamageResult dmg = calculate_damage(attacker, defender, temp_move);
+    result.damage = dmg.damage;
+
+    // Lock into Rage (until switched out)
+    attacker.lock_into_move(move_data, 999);
+    result.success = true;
+    break;
+  }
+
+  case MoveEffectType::Disable: {
+    if (!battle) {
+      result.success = false;
+      break;
+    }
+
+    int move_count = defender.move_count();
+    if (move_count == 0) {
+      result.success = false;
+      result.message = "But it failed!";
+      break;
+    }
+
+    int random_move = rng_int(0, move_count - 1);
+    int duration = rng_int(1, 7); // Gen 1: 1-7 turns
+    defender.disable_move(random_move, duration);
+    result.success = true;
+    result.message = "Disabled a move!";
+    break;
+  }
+
   case MoveEffectType::Haze: {
     attacker.reset_stat_stages();
     defender.reset_stat_stages();
@@ -139,7 +226,7 @@ void apply_secondary_effect(Pokemon &attacker, Pokemon &defender,
   // Check if secondary effect triggers
   int roll = rng_int(1, 100);
   if (roll <= effect.chance) {
-    apply_move_effect(attacker, defender,
+    apply_move_effect(attacker, defender, nullptr,
                       nullptr); // Would need to pass effect data differently
   }
 }
