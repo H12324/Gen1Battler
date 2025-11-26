@@ -5,6 +5,8 @@ add_executable(tests
   test_damage.cpp
   test_accuracy.cpp
   test_battle.cpp
+  test_type_effectiveness.cpp
+  test_move_effects.cpp
 )
 
 target_include_directories(tests PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/include)

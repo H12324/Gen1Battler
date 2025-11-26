@@ -139,6 +139,32 @@ void Battle::apply_move(Pokemon &attacker, Pokemon &defender, const Move &move,
     // For other effects, use the effects engine
     EffectResult eff_result =
         apply_move_effect(attacker, defender, move.data, battle);
+
+    // Apply damage from effect
+    if (eff_result.damage > 0) {
+      defender.take_damage(eff_result.damage);
+      std::cout << defender.name() << " took " << eff_result.damage
+                << " damage!\n";
+
+      // Record damage for Counter mechanic
+      defender.record_damage_taken(eff_result.damage, move.data);
+    }
+
+    // Apply recoil damage to attacker
+    if (eff_result.recoil_damage > 0) {
+      attacker.take_damage(eff_result.recoil_damage);
+      std::cout << attacker.name() << " is hit with recoil!\n";
+      if (attacker.hp() <= 0) {
+        std::cout << attacker.name() << " fainted from recoil!\n";
+      }
+    }
+
+    // Apply drain healing to attacker
+    if (eff_result.drain_amount > 0) {
+      attacker.heal(eff_result.drain_amount);
+      std::cout << attacker.name() << " drained HP!\n";
+    }
+
     if (!eff_result.message.empty()) {
       std::cout << eff_result.message << "\n";
     }
