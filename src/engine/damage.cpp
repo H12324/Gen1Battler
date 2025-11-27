@@ -35,9 +35,19 @@ DamageResult calculate_damage(const Pokemon &attacker, const Pokemon &defender,
   if (move.data->category == MoveCategory::Physical) {
     atk = attacker.get_modified_stat(PokeStat::Attack);
     def = defender.get_modified_stat(PokeStat::Defense);
+
+    // Apply Reflect (halves physical damage in Gen 1)
+    if (defender.has_reflect()) {
+      def *= 2;
+    }
   } else {
     atk = attacker.get_modified_stat(PokeStat::Special);
     def = defender.get_modified_stat(PokeStat::Special);
+
+    // Apply Light Screen (halves special damage in Gen 1)
+    if (defender.has_light_screen()) {
+      def *= 2;
+    }
   }
 
   // Gen 1 Crit ignores stat modifiers (not implemented yet, but good to note)

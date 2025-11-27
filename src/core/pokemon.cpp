@@ -5,7 +5,10 @@
 Pokemon::Pokemon(const std::string &species_name, int level)
     : level_(level), status_(PokeStatus::None),
       volatile_status_(VolatileStatus::None), confusion_turns_(0),
-      sleep_turns_(0), toxic_counter_(0), move_count_(0) {
+      sleep_turns_(0), toxic_counter_(0), move_count_(0), bide_active_(false),
+      bide_turns_remaining_(0), bide_damage_stored_(0), reflect_active_(false),
+      reflect_turns_remaining_(0), light_screen_active_(false),
+      light_screen_turns_remaining_(0) {
 
   species_ = GameData::getInstance().getSpecies(species_name);
   if (!species_) {
@@ -261,4 +264,67 @@ void Pokemon::update_disable() {
 
 bool Pokemon::is_move_disabled(int move_index) const {
   return disabled_move_index_ == move_index && disable_turns_remaining_ > 0;
+}
+
+// Bide methods
+void Pokemon::start_bide(int turns) {
+  bide_active_ = true;
+  bide_turns_remaining_ = turns;
+  bide_damage_stored_ = 0;
+}
+
+void Pokemon::store_bide_damage(int damage) {
+  if (bide_active_) {
+    bide_damage_stored_ += damage;
+  }
+}
+
+int Pokemon::release_bide() {
+  int damage = bide_damage_stored_ * 2; // Bide returns 2x damage
+  bide_active_ = false;
+  bide_turns_remaining_ = 0;
+  bide_damage_stored_ = 0;
+  return damage;
+}
+
+bool Pokemon::is_bide_active() const { return bide_active_; }
+
+void Pokemon::update_bide() {
+  if (bide_turns_remaining_ > 0) {
+    bide_turns_remaining_--;
+  }
+}
+
+// Reflect/Light Screen methods
+void Pokemon::activate_reflect(int turns) {
+  reflect_active_ = true;
+  reflect_turns_remaining_ = turns;
+}
+
+void Pokemon::activate_light_screen(int turns) {
+  light_screen_active_ = true;
+  light_screen_turns_remaining_ = turns;
+}
+
+bool Pokemon::has_reflect() const {
+  return reflect_active_ && reflect_turns_remaining_ > 0;
+}
+
+bool Pokemon::has_light_screen() const {
+  return light_screen_active_ && light_screen_turns_remaining_ > 0;
+}
+
+void Pokemon::update_screens() {
+  if (reflect_turns_remaining_ > 0) {
+    reflect_turns_remaining_--;
+    if (reflect_turns_remaining_ == 0) {
+      reflect_active_ = false;
+    }
+  }
+  if (light_screen_turns_remaining_ > 0) {
+    light_screen_turns_remaining_--;
+    if (light_screen_turns_remaining_ == 0) {
+      light_screen_active_ = false;
+    }
+  }
 }

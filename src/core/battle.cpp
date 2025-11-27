@@ -37,6 +37,10 @@ void Battle::execute_turn(int player_move_index, int ai_move_index) {
   // End of turn updates
   active1.update_disable();
   active2.update_disable();
+  active1.update_bide();
+  active2.update_bide();
+  active1.update_screens();
+  active2.update_screens();
 
   // Apply end-of-turn status damage
   if (active1.hp() > 0) {
@@ -114,6 +118,9 @@ void Battle::apply_move(Pokemon &attacker, Pokemon &defender, const Move &move,
 
     // Record damage for Counter mechanic
     defender.record_damage_taken(result.damage, move.data);
+
+    // Store damage for Bide if active
+    defender.store_bide_damage(result.damage);
 
     if (result.critical) {
       std::cout << "Critical hit!\n";

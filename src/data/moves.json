@@ -1094,36 +1094,6 @@
     "category": "Status",
     "power": 0,
     "accuracy": 100,
-    "pp": 30,
-    "effect": {
-      "type": "haze"
-    }
-  },
-  "Reflect": {
-    "type": "Psychic",
-    "category": "Status",
-    "power": 0,
-    "accuracy": 100,
-    "pp": 20
-  },
-  "Focus Energy": {
-    "type": "Normal",
-    "category": "Status",
-    "power": 0,
-    "accuracy": 100,
-    "pp": 30
-  },
-  "Bide": {
-    "type": "Normal",
-    "category": "Physical",
-    "power": 1,
-    "accuracy": 100,
-    "pp": 10
-  },
-  "Metronome": {
-    "type": "Normal",
-    "category": "Status",
-    "power": 0,
     "accuracy": 100,
     "pp": 10
   },

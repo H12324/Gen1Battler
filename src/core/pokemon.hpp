@@ -80,6 +80,17 @@ private:
   int disabled_move_index_ = -1;
   int disable_turns_remaining_ = 0;
 
+  // Bide tracking
+  bool bide_active_ = false;
+  int bide_turns_remaining_ = 0;
+  int bide_damage_stored_ = 0;
+
+  // Reflect/Light Screen tracking
+  bool reflect_active_ = false;
+  int reflect_turns_remaining_ = 0;
+  bool light_screen_active_ = false;
+  int light_screen_turns_remaining_ = 0;
+
   // Moves
   std::array<Move, 4> moves_;
   int move_count_;
@@ -101,4 +112,18 @@ public:
   void disable_move(int move_index, int turns);
   void update_disable();
   bool is_move_disabled(int move_index) const;
+
+  // Bide
+  void start_bide(int turns);
+  void store_bide_damage(int damage);
+  int release_bide();
+  bool is_bide_active() const;
+  void update_bide();
+
+  // Reflect/Light Screen
+  void activate_reflect(int turns);
+  void activate_light_screen(int turns);
+  bool has_reflect() const;
+  bool has_light_screen() const;
+  void update_screens();
 };

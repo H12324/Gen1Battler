@@ -205,6 +205,37 @@ EffectResult apply_move_effect(Pokemon &attacker, Pokemon &defender,
     break;
   }
 
+  case MoveEffectType::Bide: {
+    if (attacker.is_bide_active()) {
+      // Bide is ending - unleash stored damage
+      result.damage = attacker.release_bide();
+      result.success = true;
+      result.message = attacker.name() + " unleashed energy!";
+    } else {
+      // Start Bide - store damage for 2-3 turns
+      int turns = rng_int(2, 3); // Gen 1: 2-3 turns
+      attacker.start_bide(turns);
+      result.success = true;
+      result.message = attacker.name() + " is storing energy!";
+    }
+    break;
+  }
+
+  case MoveEffectType::Reflect: {
+    attacker.activate_reflect(5); // Gen 1: Reflect lasts 5 turns
+    result.success = true;
+    result.message = attacker.name() + "'s Reflect raised physical defense!";
+    break;
+  }
+
+  case MoveEffectType::LightScreen: {
+    attacker.activate_light_screen(5); // Gen 1: Light Screen lasts 5 turns
+    result.success = true;
+    result.message =
+        attacker.name() + "'s Light Screen raised special defense!";
+    break;
+  }
+
   case MoveEffectType::Haze: {
     attacker.reset_stat_stages();
     defender.reset_stat_stages();
