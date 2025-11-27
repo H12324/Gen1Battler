@@ -155,6 +155,23 @@ bool Pokemon::apply_status(PokeStatus new_status) {
     return false;
   }
 
+  // Type immunities (Gen 1)
+  if (new_status == PokeStatus::Poison || new_status == PokeStatus::Toxic) {
+    // Poison-types are immune to poison
+    if (species_->type1 == PokeType::Poison ||
+        species_->type2 == PokeType::Poison) {
+      return false;
+    }
+  }
+
+  if (new_status == PokeStatus::Burn) {
+    // Fire-types are immune to burn
+    if (species_->type1 == PokeType::Fire ||
+        species_->type2 == PokeType::Fire) {
+      return false;
+    }
+  }
+
   status_ = new_status;
 
   // Initialize status-specific counters

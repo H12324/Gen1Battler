@@ -30,6 +30,7 @@ void Battle::execute_turn(int player_move_index, int ai_move_index) {
 
   // Second Pokemon attacks (if both alive)
   if (second->hp() > 0 && first->hp() > 0) {
+    std::cout << "\n"; // Add spacing between Pokemon moves
     execute_pokemon_move(*second, *first, second_move_idx);
   }
 

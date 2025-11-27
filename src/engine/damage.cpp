@@ -51,9 +51,9 @@ DamageResult calculate_damage(const Pokemon &attacker, const Pokemon &defender,
 
   // 4. Base Damage Calculation
   // ((2 * Level * Crit / 5 + 2) * Power * A / D) / 50 + 2
+  // CRITICAL: Must do multiplication before division to avoid precision loss
   int damage =
-      ((2 * level * crit_factor / 5 + 2) * move.data->power * (atk / def)) /
-          50 +
+      ((2 * level * crit_factor / 5 + 2) * move.data->power * atk / def) / 50 +
       2;
 
   // 5. STAB

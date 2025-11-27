@@ -410,9 +410,10 @@ void apply_end_of_turn_status_damage(Pokemon &pokemon) {
     pokemon.take_damage(damage);
     std::cout << pokemon.name() << " is hurt by ";
     if (status == PokeStatus::Burn)
-      std::cout << "its burn!\n";
+      std::cout << "its burn";
     else
-      std::cout << "poison!\n";
+      std::cout << "poison";
+    std::cout << "! (" << damage << " damage)\n";
     break;
   }
 
@@ -423,7 +424,8 @@ void apply_end_of_turn_status_damage(Pokemon &pokemon) {
     if (damage < 1)
       damage = 1;
     pokemon.take_damage(damage);
-    std::cout << pokemon.name() << " is hurt by poison!\n";
+    std::cout << pokemon.name() << " is hurt by poison! (" << damage
+              << " damage)\n";
     break;
   }
 
