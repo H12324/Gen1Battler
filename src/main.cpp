@@ -1,10 +1,10 @@
+#include "ai/gen1_ai.hpp"
 #include "core/battle.hpp"
 #include "data/loader.hpp"
 #include "ui/cli.hpp"
 #include <algorithm>
 #include <iostream>
 #include <random>
-
 
 int main() {
   std::cout << "Pokemon Gen 1 Battler\n";
@@ -79,8 +79,11 @@ int main() {
   std::cout << "\n=== Battle Start ===\n";
   std::cout << team1[0].name() << " vs " << team2[0].name() << "!\n\n";
 
-  // Run the CLI battle
-  run_cli(battle);
+  // Create Gen1 AI for the opponent
+  Gen1AI opponent_ai;
+
+  // Run the CLI battle with Gen1 AI
+  run_cli(battle, opponent_ai);
 
   return 0;
 }

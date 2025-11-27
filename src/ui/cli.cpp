@@ -1,4 +1,5 @@
 #include "cli.hpp"
+#include "../ai/ai_interface.hpp"
 #include "../core/battle.hpp"
 #include "../core/rng.hpp"
 #include <iostream>
@@ -9,7 +10,7 @@ using namespace std;
 
 void print_mon(const Pokemon &mon);
 
-void run_cli(Battle &b) {
+void run_cli(Battle &b, const BattleAI &ai) {
   int turn = 1;
 
   while (!b.over) {
@@ -49,8 +50,8 @@ void run_cli(Battle &b) {
       }
     } while (player_choice < 1 || player_choice > b.active1.move_count());
 
-    // AI chooses random move
-    int ai_choice = rng_int(0, b.active2.move_count() - 1);
+    // AI chooses move using the AI system
+    int ai_choice = ai.choose_move(b.active2, b.active1);
 
     std::cout << "\n";
     b.execute_turn(player_choice - 1, ai_choice);
