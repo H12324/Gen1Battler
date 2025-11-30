@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <memory>
 #include <string>
 
@@ -38,7 +39,9 @@ struct Move {
       current_pp--;
   }
   void restore_pp(int amount) {
-    if (data)
-      current_pp = std::min(current_pp + amount, data->max_pp);
+    if (data) {
+      int new_pp = current_pp + amount;
+      current_pp = (new_pp > data->max_pp) ? data->max_pp : new_pp;
+    }
   }
 };

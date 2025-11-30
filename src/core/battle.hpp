@@ -25,18 +25,23 @@ public:
   Pokemon active1;
   Pokemon active2;
 
-private:
-  void execute_pokemon_move(Pokemon &attacker, Pokemon &defender,
-                            int move_index);
-  void apply_move(Pokemon &attacker, Pokemon &defender, const Move &move,
-                  Battle *battle);
-  int get_next_available_pokemon(int team_num) const;
-  void sync_active_to_team();
+  // Virtual logging method for output (can be overridden for network battles)
+  virtual void log(const std::string &message);
 
+protected:
+  // Protected for NetworkBattle inheritance
   std::vector<Pokemon> team1;
   std::vector<Pokemon> team2;
-
   int active1_index;
   int active2_index;
   int turn = 0;
+
+  void execute_pokemon_move(Pokemon &attacker, Pokemon &defender,
+                            int move_index);
+  void sync_active_to_team();
+  int get_next_available_pokemon(int team_num) const;
+
+private:
+  void apply_move(Pokemon &attacker, Pokemon &defender, const Move &move,
+                  Battle *battle);
 };

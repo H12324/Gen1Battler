@@ -3,6 +3,8 @@
 #include "../engine/move_effects.hpp"
 #include <iostream>
 
+void Battle::log(const std::string &message) { std::cout << message; }
+
 void Battle::execute_turn(int player_move_index, int ai_move_index) {
   turn++;
 
@@ -65,21 +67,20 @@ void Battle::execute_pokemon_move(Pokemon &attacker, Pokemon &defender,
 
   // Check if move is disabled
   if (attacker.is_move_disabled(move_index)) {
-    std::cout << attacker.name() << "'s move is disabled!\n";
+    log(attacker.name() + "'s move is disabled!\n");
     return;
   }
 
   // Check PP
   if (!move.has_pp()) {
-    std::cout << attacker.name() << " has no PP left for " << move.data->name
-              << "!\n";
+    log(attacker.name() + " has no PP left for " + move.data->name + "!\n");
     return;
   }
 
   // Check status conditions
   std::string status_message;
   if (!can_move_with_status(attacker, status_message)) {
-    std::cout << status_message << "\n";
+    log(status_message + "\n");
     return;
   }
 
@@ -93,11 +94,11 @@ void Battle::execute_pokemon_move(Pokemon &attacker, Pokemon &defender,
 void Battle::apply_move(Pokemon &attacker, Pokemon &defender, const Move &move,
                         Battle *battle) {
   if (!move.data) {
-    std::cout << attacker.name() << " has no move!\n";
+    log(attacker.name() + " has no move!\n");
     return;
   }
 
-  std::cout << attacker.name() << " used " << move.data->name << "!\n";
+  log(attacker.name() + " used " + move.data->name + "!\n");
 
   // Get the move effect type
   const MoveEffect &effect = move.data->primary_effect;
