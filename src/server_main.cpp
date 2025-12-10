@@ -54,7 +54,16 @@ int main(int argc, char **argv) {
 
     // Create and run battle
     NetworkBattle battle(team1, team2, clients[0], clients[1]);
-    battle.run();
+
+    try {
+      battle.run();
+    } catch (const std::exception &e) {
+      std::cerr << "[Server] Exception during battle: " << e.what() << "\n";
+      return 1;
+    } catch (...) {
+      std::cerr << "[Server] Unknown exception during battle\n";
+      return 1;
+    }
 
     std::cout << "\nBattle complete! Server shutting down...\n";
   } else if (mode == 2) {

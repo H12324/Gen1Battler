@@ -69,17 +69,19 @@ void GameClient::handle_message(const Message &msg) {
   case MessageType::MOVE_REQUEST: {
     // Just display the move request, don't prompt yet
     // The prompt will happen in the run() loop after all messages are processed
-    std::cout << "\n" << msg.get_payload_string();
+    std::cout << "\n" << msg.get_payload_string() << "\n";
     break;
   }
 
   case MessageType::SWITCH_REQUEST: {
-    std::cout << "\nChoose a Pokemon to switch to:\n";
+    // Display the switch request message from server (includes Pokemon list)
+    std::cout << msg.get_payload_string();
     int switch_choice = prompt_switch_choice();
 
     Message response(MessageType::SWITCH_RESPONSE);
     response.set_payload_int(switch_choice);
     socket_.send(response.serialize());
+    std::cout << "[Client] Switch response sent: " << switch_choice << "\n";
     break;
   }
 
