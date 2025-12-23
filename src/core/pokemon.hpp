@@ -26,6 +26,7 @@ public:
   PokeStatus status() const;
   VolatileStatus volatile_status() const;
   int stat_stage(PokeStat stat) const;
+  const SpeciesData *species() const { return species_; }
 
   // Status and stat modification
   bool apply_status(PokeStatus new_status);

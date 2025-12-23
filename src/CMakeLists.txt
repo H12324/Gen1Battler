@@ -46,3 +46,7 @@ target_link_libraries(battler_client PRIVATE battler)
 # Network test executable
 add_executable(network_test network_test.cpp)
 target_link_libraries(network_test PRIVATE battler)
+
+# Auto-battler executable
+add_executable(autobattler autobattler_main.cpp)
+target_link_libraries(autobattler PRIVATE battler)
